@@ -75,12 +75,19 @@ int main()
     glGenBuffers( 1, &ebo );
     glGenVertexArrays( 1, &vao );
 
+    // topright - bottomleft = width and height. So the more range between bottomleft and topright, the more width and height it get.
+    glm::vec2 bottomleft = { 0.3f, 0.3f };
+    glm::vec2 topright = { 0.7f, 0.7f };
+    // // Try use this below, we'll see that the image is getting more zoom than before.
+    // glm::vec2 bottomleft = { 0.45f, 0.45f };
+    // glm::vec2 topright = { 0.55f, 0.55f };
+
     float vertices [] = {
         // position         // color            // texcoord
-        0.5f,  0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   2.0f, 2.0f, // top right
-         0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,   2.0f, 0.0f, // bottom right
-        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
-        -0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 1.0f,   0.0f, 2.0f  // top left 
+        0.5f,  0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   topright.x, topright.y, // top right
+         0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,   topright.x, bottomleft.y,   // bottom right
+        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,   bottomleft.x, bottomleft.y, // bottom left
+        -0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 1.0f,   bottomleft.x, topright.y    // top left 
     };
     unsigned int indices [] = {
         0, 1, 3,
