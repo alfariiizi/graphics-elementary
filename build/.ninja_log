@@ -1,9 +1,0 @@
-# ninja log v5
-2	739	1625613079562539582	src/utils/CMakeFiles/gl_loader.dir/Shader.cpp.o	632caf7ef4a4b996
-1219	1393	1625617917330060725	src/getting-started/get-start	2d29716e0942af0d
-1	1218	1625617917156727384	src/getting-started/CMakeFiles/get-start.dir/main.cpp.o	598049bf34f0d4a4
-1214	1261	1625613080085872938	src/utils/libgl_loader.a	b0026d27f8f8c9c6
-2	1145	1625613079969206266	src/utils/CMakeFiles/gladd.dir/__/__/external/glad/glad.c.o	10127bef72c71808
-1145	1213	1625613080035872935	src/utils/libgladd.a	44cf191695da3139
-1	557	1625613079382539574	src/utils/CMakeFiles/gl_loader.dir/GL_Loader.cpp.o	aaf98f700dff4ed0
-0	43	1625653511058873290	build.ninja	51d57e2297dbc8ff

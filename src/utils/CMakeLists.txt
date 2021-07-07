@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.15)
 
 include_guard()
 
-include( ${CMAKE_SOURCE_DIR}/external/glad/CMakeLists.txt )
+include( ${CMAKE_SOURCE_DIR}/external/CMakeLists.txt )
 
 project( utils )
 
@@ -16,6 +16,7 @@ add_library( gl_loader
 target_link_libraries( gl_loader 
     PUBLIC
         gladd 
+        stb_image
 )
 
 target_include_directories( gl_loader

@@ -23,9 +23,19 @@ Shader::Shader(const std::string& vertexShaderPath, const std::string& fragmentS
     glDeleteShader(fragmentShader);
 }
 
+void Shader::destroy() 
+{
+    glDeleteProgram( id );
+}
+
 void Shader::use() const
 {
     glUseProgram(id);
+}
+
+void Shader::notUsed() const
+{
+    glUseProgram( 0 );
 }
 
 void Shader::setBool(const std::string& name, bool value) 

@@ -1,9 +1,0 @@
-/home/alfarizi/dev/graphics-elementary/build/CMakeFiles/rebuild_cache.dir
-/home/alfarizi/dev/graphics-elementary/build/CMakeFiles/edit_cache.dir
-/home/alfarizi/dev/graphics-elementary/build/src/utils/CMakeFiles/rebuild_cache.dir
-/home/alfarizi/dev/graphics-elementary/build/src/utils/CMakeFiles/edit_cache.dir
-/home/alfarizi/dev/graphics-elementary/build/src/utils/CMakeFiles/gl_loader.dir
-/home/alfarizi/dev/graphics-elementary/build/src/utils/CMakeFiles/gladd.dir
-/home/alfarizi/dev/graphics-elementary/build/src/getting-started/CMakeFiles/rebuild_cache.dir
-/home/alfarizi/dev/graphics-elementary/build/src/getting-started/CMakeFiles/edit_cache.dir
-/home/alfarizi/dev/graphics-elementary/build/src/getting-started/CMakeFiles/get-start.dir

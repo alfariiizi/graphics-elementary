@@ -1,1 +1,0 @@
-/usr/bin/c++ -g CMakeFiles/get-start.dir/main.cpp.o -o get-start  libgladd.a -lGL -lglfw -lX11 -lpthread -lXrandr -lXi -ldl 
