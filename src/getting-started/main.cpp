@@ -21,15 +21,16 @@
 
 void framebufferSizeCallback( GLFWwindow* window, int width, int height );
 void processInput( GLFWwindow* window );
-void loadTexture( const std::string& pathToImage, unsigned int imageFormat, unsigned int& texture )
+void loadTexture( const std::string& pathToImage, unsigned int imageFormat, int wrap, int filtering, unsigned int& texture )
 {
     glGenTextures(1, &texture);
     glBindTexture( GL_TEXTURE_2D, texture );
 
-    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
-    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
-    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+    // wrap_s and wrap_t don't have to have the same value. So it could be hybrid (combination of other wrapping)
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filtering );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filtering );
 
     int width, height, nrChannels;
     stbi_set_flip_vertically_on_load( true );
@@ -76,10 +77,10 @@ int main()
 
     float vertices [] = {
         // position         // color            // texcoord
-        0.5f,  0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
-         0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // bottom right
+        0.5f,  0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   2.0f, 2.0f, // top right
+         0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,   2.0f, 0.0f, // bottom right
         -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
-        -0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 1.0f,   0.0f, 1.0f  // top left 
+        -0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 1.0f,   0.0f, 2.0f  // top left 
     };
     unsigned int indices [] = {
         0, 1, 3,
@@ -99,9 +100,9 @@ int main()
 
     // -- Texture
     unsigned int containerTexture;
-    loadTexture( std::string(ASSETH_PATH) + "/container.jpg", GL_RGB, containerTexture );
+    loadTexture( std::string(ASSETH_PATH) + "/container.jpg", GL_RGB, GL_CLAMP_TO_EDGE, GL_NEAREST, containerTexture );
     unsigned int awesomefaceTexture;
-    loadTexture( std::string(ASSETH_PATH) + "/awesomeface.png", GL_RGBA, awesomefaceTexture );
+    loadTexture( std::string(ASSETH_PATH) + "/awesomeface.png", GL_RGBA, GL_MIRRORED_REPEAT, GL_LINEAR, awesomefaceTexture );
 
     shader.use();
     shader.setInt("containerTex", 0);

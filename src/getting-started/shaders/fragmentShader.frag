@@ -11,5 +11,5 @@ layout( location = 1 ) uniform sampler2D awesomefaceTex;
 void main()
 {
     // ourTexture: 2D ; texcoord vec2 ; so, the total maybe 4 float (vec4)
-    outColor = mix( texture(containerTex, texcoord), texture(awesomefaceTex, vec2(texcoord.x, texcoord.y * -1.0)), 0.2 );
+    outColor = mix( texture(containerTex, texcoord), texture(awesomefaceTex, texcoord), 0.2 );
 }
