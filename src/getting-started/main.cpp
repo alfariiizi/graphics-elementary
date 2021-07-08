@@ -119,9 +119,9 @@ int main()
     // -- Transformations
     glm::mat4 transform = glm::mat4( 1.0f );
     float rotationFactor = glfwGetTime();
-    transform = glm::translate( transform, glm::vec3( 0.5f, -0.5f, 0.0f));
     transform = glm::rotate( transform, rotationFactor, glm::vec3(0.0f, 0.0f, 1.0f) );
-    transform = glm::scale( transform, glm::vec3(0.5f, 0.5f, 0.5f) );
+    transform = glm::translate( transform, glm::vec3( 0.5f, -0.5f, 0.0f));
+    // transform = glm::scale( transform, glm::vec3(0.5f, 0.5f, 0.5f) );
 
     // -- Change value in shader
     shader.use();
@@ -173,8 +173,8 @@ int main()
         // -- Transformation
         transform = glm::mat4( 1.0f );
         float rotationFactor = glfwGetTime();
-        transform = glm::translate( transform, glm::vec3( 0.5f, -0.5f, 0.0f));
         transform = glm::rotate( transform, rotationFactor, glm::vec3(0.0f, 0.0f, 1.0f) );
+        transform = glm::translate( transform, glm::vec3( 0.5f, -0.5f, 0.0f));
         // transform = glm::scale( transform, glm::vec3(0.5f, 0.5f, 0.5f) );
         // -- Set in the shader
         shader.setFloat("alpha", alpha);
