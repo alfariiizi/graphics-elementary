@@ -19,6 +19,9 @@
     #define SHADER_PATH ""
 #endif
 
+float alpha = 0.5f;
+const float alpha_increase = 0.005f;
+
 void framebufferSizeCallback( GLFWwindow* window, int width, int height );
 void processInput( GLFWwindow* window );
 void loadTexture( const std::string& pathToImage, unsigned int imageFormat, int wrap, int filtering, unsigned int& texture )
@@ -76,8 +79,8 @@ int main()
     glGenVertexArrays( 1, &vao );
 
     // topright - bottomleft = width and height. So the more range between bottomleft and topright, the more width and height it get.
-    glm::vec2 bottomleft = { 0.3f, 0.3f };
-    glm::vec2 topright = { 0.7f, 0.7f };
+    glm::vec2 bottomleft = { 0.0f, 0.0f };
+    glm::vec2 topright = { 1.0f, 1.0f };
     // // Try use this below, we'll see that the image is getting more zoom than before.
     // glm::vec2 bottomleft = { 0.45f, 0.45f };
     // glm::vec2 topright = { 0.55f, 0.55f };
@@ -114,6 +117,7 @@ int main()
     shader.use();
     shader.setInt("containerTex", 0);
     shader.setInt("awesomefaceTex", 1);
+    shader.setFloat("alpha", alpha);
     shader.notUsed();
 
     unsigned int stride = 8 * sizeof(float);
@@ -155,10 +159,8 @@ int main()
         // ..+ Setting up per-frame value +..
         // ----------------------------------
         shader.use();
+        shader.setFloat("alpha", alpha);
 
-        // float timeValue = glfwGetTime();
-        // float u_color = glm::sin( timeValue ) / 2.0f + 0.5f;
-        // shader.setFloat( "u_colorChangeable", u_color );
         // ----------------------------------
 
         // ..+ Bindings +..
@@ -206,6 +208,7 @@ void processInput( GLFWwindow* window )
     {
         glfwSetWindowShouldClose( window, true );
     }
+
     if( glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS )
     {
         glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
@@ -213,5 +216,16 @@ void processInput( GLFWwindow* window )
     else
     {
         glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+    }
+
+    if( glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS )
+    {
+        if( alpha < 1.0f )
+            alpha += alpha_increase;
+    }
+    if( glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS )
+    {
+        if( alpha > 0.0f )
+            alpha -= alpha_increase;
     }
 }
