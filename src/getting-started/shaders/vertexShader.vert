@@ -8,10 +8,11 @@ layout( location = 0 ) out vec4 fragColor;
 layout( location = 1 ) out vec2 texcoord;
 
 // layout( location = 0 ) uniform float u_colorChangeable;
+layout( location = 4 ) uniform mat4 transform;
 
 void main()
 {
-    gl_Position = vec4( aPos, 1.0f );
+    gl_Position = transform * vec4( aPos, 1.0f );
     fragColor = vec4( aColor, 1.0f );
     texcoord = aTexcoord;
 }

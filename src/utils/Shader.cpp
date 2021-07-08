@@ -2,6 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <assert.h>
+#include <glm/gtc/type_ptr.hpp>
 
 Shader::Shader(const std::string& vertexShaderPath, const std::string& fragmentShaderPath)
 {
@@ -51,6 +52,11 @@ void Shader::setInt(const std::string&name, int value)
 void Shader::setFloat(const std::string&name, float value) 
 {
     glUniform1f( glGetUniformLocation(id, name.c_str()), value );
+}
+
+void Shader::setMat4fv(const std::string& name, const glm::mat4& matrix, int matrixSize, bool transpose) 
+{
+    glUniformMatrix4fv( glGetUniformLocation(id, name.c_str()), matrixSize, transpose, glm::value_ptr(matrix) );
 }
 
 unsigned int Shader::getId() const

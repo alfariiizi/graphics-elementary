@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GL_Loader.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 
 class Shader
 {
@@ -12,6 +13,7 @@ public:
     void setBool( const std::string& name, bool value );
     void setInt( const std::string&name, int value );
     void setFloat( const std::string&name, float value );
+    void setMat4fv( const std::string& name, const glm::mat4& matrix, int matrixSize, bool transpose );
     unsigned int getId() const;
 
 private:

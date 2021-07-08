@@ -2,6 +2,8 @@
 #include "Shader.hpp"
 
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "stb_image.h"
 
@@ -114,10 +116,19 @@ int main()
     unsigned int awesomefaceTexture;
     loadTexture( std::string(ASSETH_PATH) + "/awesomeface.png", GL_RGBA, GL_MIRRORED_REPEAT, GL_LINEAR, awesomefaceTexture );
 
+    // -- Transformations
+    glm::mat4 transform = glm::mat4( 1.0f );
+    float rotationFactor = glfwGetTime();
+    transform = glm::translate( transform, glm::vec3( 0.5f, -0.5f, 0.0f));
+    transform = glm::rotate( transform, rotationFactor, glm::vec3(0.0f, 0.0f, 1.0f) );
+    transform = glm::scale( transform, glm::vec3(0.5f, 0.5f, 0.5f) );
+
+    // -- Change value in shader
     shader.use();
     shader.setInt("containerTex", 0);
     shader.setInt("awesomefaceTex", 1);
     shader.setFloat("alpha", alpha);
+    shader.setMat4fv("transform", transform, 1, false);
     shader.notUsed();
 
     unsigned int stride = 8 * sizeof(float);
@@ -159,8 +170,15 @@ int main()
         // ..+ Setting up per-frame value +..
         // ----------------------------------
         shader.use();
+        // -- Transformation
+        transform = glm::mat4( 1.0f );
+        float rotationFactor = glfwGetTime();
+        transform = glm::translate( transform, glm::vec3( 0.5f, -0.5f, 0.0f));
+        transform = glm::rotate( transform, rotationFactor, glm::vec3(0.0f, 0.0f, 1.0f) );
+        // transform = glm::scale( transform, glm::vec3(0.5f, 0.5f, 0.5f) );
+        // -- Set in the shader
         shader.setFloat("alpha", alpha);
-
+        shader.setMat4fv("transform", transform, 1, false);
         // ----------------------------------
 
         // ..+ Bindings +..
