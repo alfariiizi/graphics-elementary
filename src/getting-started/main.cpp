@@ -116,19 +116,10 @@ int main()
     unsigned int awesomefaceTexture;
     loadTexture( std::string(ASSETH_PATH) + "/awesomeface.png", GL_RGBA, GL_MIRRORED_REPEAT, GL_LINEAR, awesomefaceTexture );
 
-    // -- Transformations
-    glm::mat4 transform = glm::mat4( 1.0f );
-    float rotationFactor = glfwGetTime();
-    transform = glm::rotate( transform, rotationFactor, glm::vec3(0.0f, 0.0f, 1.0f) );
-    transform = glm::translate( transform, glm::vec3( 0.5f, -0.5f, 0.0f));
-    // transform = glm::scale( transform, glm::vec3(0.5f, 0.5f, 0.5f) );
-
     // -- Change value in shader
     shader.use();
     shader.setInt("containerTex", 0);
     shader.setInt("awesomefaceTex", 1);
-    shader.setFloat("alpha", alpha);
-    shader.setMat4fv("transform", transform, 1, false);
     shader.notUsed();
 
     unsigned int stride = 8 * sizeof(float);
@@ -157,6 +148,8 @@ int main()
      */
     while( !glfwWindowShouldClose(window) )
     {
+        float time = glfwGetTime();
+
         // input
         processInput( window );
 
@@ -166,20 +159,6 @@ int main()
         /// clearing the screen
         glClearColor( 0.2f, 0.3f, 0.6f, 1.0f );
         glClear( GL_COLOR_BUFFER_BIT );
-
-        // ..+ Setting up per-frame value +..
-        // ----------------------------------
-        shader.use();
-        // -- Transformation
-        transform = glm::mat4( 1.0f );
-        float rotationFactor = glfwGetTime();
-        transform = glm::rotate( transform, rotationFactor, glm::vec3(0.0f, 0.0f, 1.0f) );
-        transform = glm::translate( transform, glm::vec3( 0.5f, -0.5f, 0.0f));
-        // transform = glm::scale( transform, glm::vec3(0.5f, 0.5f, 0.5f) );
-        // -- Set in the shader
-        shader.setFloat("alpha", alpha);
-        shader.setMat4fv("transform", transform, 1, false);
-        // ----------------------------------
 
         // ..+ Bindings +..
         // ----------------
@@ -191,11 +170,34 @@ int main()
         glBindVertexArray( vao );
         // ----------------
 
-        /// draw the triangle
-        // glDrawArrays( GL_TRIANGLES, 0, 3 );
-        glDrawElements( GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, (void*)0 );
+        // ..+ Setting up per-frame value +..
+        // ----------------------------------
+        shader.use();
+        // -- Shader value for all object
+        shader.setFloat("alpha", alpha);
+        // Object 1
+            // -- Transformations
+            glm::mat4 transform = glm::mat4( 1.0f );
+            time = glfwGetTime();
+            transform = glm::translate( transform, glm::vec3( 0.5f, -0.5f, 0.0f));
+            transform = glm::rotate( transform, time, glm::vec3(0.0f, 0.0f, 1.0f) );
+            // -- Set in the shader
+            shader.setMat4fv("transform", transform, 1, false);
+            // -- Draw
+            glDrawElements( GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, (void*)0 );
+        // Object 2
+            // -- Transformations
+            transform = glm::mat4( 1.0f );
+            transform = glm::translate( transform, glm::vec3( -0.5f, 0.5f, 0.0f ) );
+            float scaleFactor = glm::sin( time );
+            transform = glm::scale( transform, scaleFactor * glm::vec3( 1.0f, 1.0f, 0.0f ) );
+            // -- Set in the shader
+            shader.setMat4fv("transform", transform, 1, false);
+            // -- Draw
+            glDrawElements( GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, (void*)0 );
+        // ----------------------------------
 
-        // swap buffers and poll the events
+        // .. + swap buffers and poll the events + ..
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
