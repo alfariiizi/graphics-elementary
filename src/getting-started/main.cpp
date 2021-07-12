@@ -61,6 +61,8 @@ int main()
 
     glfwSetFramebufferSizeCallback( window, framebufferSizeCallback );
 
+    // Enabling Z-buffer
+    glEnable( GL_DEPTH_TEST );
 
     /**
      * @brief Creating shaders
@@ -70,34 +72,57 @@ int main()
     const std::string shaderPath = SHADER_PATH;
     Shader shader{shaderPath + "/vertexShader.vert", shaderPath + "/fragmentShader.frag"};
 
-
     /**
      * @brief Create Vertex Buffer
      * 
      */
-    uint32_t vbo, vao, ebo;  // vbo: vertex buffer object ; vao: vertex array object
+    uint32_t vbo, vao;  // vbo: vertex buffer object ; vao: vertex array object
     glGenBuffers( 1, &vbo );
-    glGenBuffers( 1, &ebo );
     glGenVertexArrays( 1, &vao );
 
-    // topright - bottomleft = width and height. So the more range between bottomleft and topright, the more width and height it get.
-    glm::vec2 bottomleft = { 0.0f, 0.0f };
-    glm::vec2 topright = { 1.0f, 1.0f };
-    // // Try use this below, we'll see that the image is getting more zoom than before.
-    // glm::vec2 bottomleft = { 0.45f, 0.45f };
-    // glm::vec2 topright = { 0.55f, 0.55f };
+    float vertices[] = {
+    //  Position             TextCoord
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+        0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
 
-    float vertices [] = {
-        // position         // color            // texcoord
-        0.5f,  0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   topright.x, topright.y, // top right
-         0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,   topright.x, bottomleft.y,   // bottom right
-        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,   bottomleft.x, bottomleft.y, // bottom left
-        -0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 1.0f,   bottomleft.x, topright.y    // top left 
-    };
-    unsigned int indices [] = {
-        0, 1, 3,
-        1, 2, 3
-        // so, it's clockwise
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
     };
 
     glBindVertexArray( vao ); // BEGIN RECORD VERTEX ATTRIBUTE
@@ -105,10 +130,6 @@ int main()
     // -- Vertex Buffer
     glBindBuffer( GL_ARRAY_BUFFER, vbo );
     glBufferData( GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW );
-
-    // -- Element Buffer (index buffer)
-    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, ebo );
-    glBufferData( GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW );
 
     // -- Texture
     unsigned int containerTexture;
@@ -122,16 +143,13 @@ int main()
     shader.setInt("awesomefaceTex", 1);
     shader.notUsed();
 
-    unsigned int stride = 8 * sizeof(float);
+    unsigned int stride = 5 * sizeof(float);
 
     unsigned int position_index = 0;
     glVertexAttribPointer( position_index, 3, GL_FLOAT, GL_FALSE, stride, (void*)0 );
     glEnableVertexAttribArray( position_index );
-    unsigned int color_index = 1;
-    glVertexAttribPointer( color_index, 3, GL_FLOAT, GL_FALSE, stride, (void*)(3 * sizeof(float)) );
-    glEnableVertexAttribArray( color_index );
-    unsigned int texcoord_index = 2;
-    glVertexAttribPointer( texcoord_index, 2, GL_FLOAT, GL_FALSE, stride, (void*)(6 * sizeof(float)) );
+    unsigned int texcoord_index = 1;
+    glVertexAttribPointer( texcoord_index, 2, GL_FLOAT, GL_FALSE, stride, (void*)(3 * sizeof(float)) );
     glEnableVertexAttribArray( texcoord_index );
 
     glBindVertexArray( 0 ); // END RECORD
@@ -158,7 +176,7 @@ int main()
          */
         /// clearing the screen
         glClearColor( 0.2f, 0.3f, 0.6f, 1.0f );
-        glClear( GL_COLOR_BUFFER_BIT );
+        glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
         // ..+ Bindings +..
         // ----------------
@@ -172,7 +190,7 @@ int main()
 
         // ..+ Transformation +..
         // ----------------------
-        glm::mat4 model = glm::rotate(glm::mat4(1.0f), (float)glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f) );
+        glm::mat4 model = glm::rotate(glm::mat4(1.0f), time * (float)glm::radians(55.0f), glm::vec3(0.5f, 1.0f, 0.0f) );
         glm::mat4 view = glm::translate(glm::mat4(1.0f), -1.0f * glm::vec3(0.0f, 0.0f, 3.0f) );
         glm::mat4 proj = glm::perspective((float)glm::radians(45.0f), float(SCR_WIDTH)/float(SCR_HEIGHT), 0.1f, 100.0f );
         // ----------------------
@@ -204,7 +222,8 @@ int main()
         //     // -- Set in the shader
         //     shader.setMat4fv("transform", transform, 1, false);
         //     // -- Draw
-            glDrawElements( GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, (void*)0 );
+        // glDrawElements( GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, (void*)0 );
+        glDrawArrays( GL_TRIANGLES, 0, 36 );
         // ----------------------------------
 
         // .. + swap buffers and poll the events + ..
@@ -218,8 +237,8 @@ int main()
      */
     glfwDestroyWindow(window);
     glDeleteBuffers( 1, &vbo );
-    glDeleteBuffers( 1, &ebo );
     glDeleteTextures( 1, &containerTexture );
+    glDeleteTextures( 1, &awesomefaceTexture );
     glDeleteVertexArrays( 1, &vao );
     shader.destroy();
 
