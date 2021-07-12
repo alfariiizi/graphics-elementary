@@ -173,6 +173,11 @@ int main()
     // remember: do NOT unbind the EBO while a VAO is active as the bound element buffer object IS stored in the VAO; keep the EBO bound.
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 ); // So, if it's placed before glBindVertexArray(0), it'll do NOT work
 
+    float fovDegree = 30.0f;
+    float aspectRatio = float(SCR_WIDTH) / float(SCR_HEIGHT);
+    float x_axis = 0.0f;
+    float y_axis = 0.0f;
+    float z_axis = 4.0f;
 
     /**
      * @brief Render Looping
@@ -204,12 +209,53 @@ int main()
         // ..+ Setting up per-frame value +..
         // ----------------------------------
         shader.use();
+        // -- Getting input for transformations
+        if( glfwGetKey(window, GLFW_KEY_1 ) == GLFW_PRESS )
+        {
+            fovDegree += 1.0f;
+        }
+        if( glfwGetKey(window, GLFW_KEY_2 ) == GLFW_PRESS )
+        {
+            fovDegree -= 1.0f;
+        }
+        if( glfwGetKey(window, GLFW_KEY_3 ) == GLFW_PRESS )
+        {
+            aspectRatio += 0.05f;
+        }
+        if( glfwGetKey(window, GLFW_KEY_4 ) == GLFW_PRESS )
+        {
+            aspectRatio -= 0.05f;
+        }
+        if( glfwGetKey(window, GLFW_KEY_EQUAL ) == GLFW_PRESS )
+        {
+            z_axis -= 0.05f;
+        }
+        if( glfwGetKey(window, GLFW_KEY_MINUS ) == GLFW_PRESS )
+        {
+            z_axis += 0.05f;
+        }
+        if( glfwGetKey(window, GLFW_KEY_A ) == GLFW_PRESS )
+        {
+            x_axis -= 0.05f;
+        }
+        if( glfwGetKey(window, GLFW_KEY_D ) == GLFW_PRESS )
+        {
+            x_axis += 0.05f;
+        }
+        if( glfwGetKey(window, GLFW_KEY_W ) == GLFW_PRESS )
+        {
+            y_axis += 0.05f;
+        }
+        if( glfwGetKey(window, GLFW_KEY_S ) == GLFW_PRESS )
+        {
+            y_axis -= 0.05f;
+        }
         // -- Shader value for all object
         shader.setFloat("alpha", alpha);
         // -- Transformation value for all object
-        glm::mat4 view = glm::translate(glm::mat4(1.0f), -1.0f * glm::vec3(0.0f, 0.0f, 5.0f) );
+        glm::mat4 view = glm::translate(glm::mat4(1.0f), -1.0f * glm::vec3(x_axis, y_axis, z_axis) );
         shader.setMat4fv("view", view, 1, false);
-        glm::mat4 proj = glm::perspective((float)glm::radians(45.0f), float(SCR_WIDTH)/float(SCR_HEIGHT), 0.1f, 100.0f );
+        glm::mat4 proj = glm::perspective((float)glm::radians(fovDegree), aspectRatio, 0.1f, 100.0f );
         shader.setMat4fv("proj", proj, 1, false);
         const size_t size = sizeof(cubePositions);
         // -- Transformation value for individual object
@@ -222,7 +268,11 @@ int main()
             model = glm::translate(model, cubePositions[i]);
 
             const float angle = 20.0f * (i+1); 
-            model = glm::rotate(model, timePerIterate * (float)glm::radians(angle), glm::vec3(0.5f, 1.0f, 0.0f) );
+
+            if( i%3 == 0 )
+                model = glm::rotate(model, timePerIterate * (float)glm::radians(angle), glm::vec3(0.5f, 1.0f, 0.0f) );
+            else
+                model = glm::rotate(model, (float)glm::radians(angle), glm::vec3(0.5f, 1.0f, 0.0f) );
 
             shader.setMat4fv("model", model, 1, false);
 
