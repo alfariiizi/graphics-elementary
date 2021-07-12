@@ -125,6 +125,19 @@ int main()
         -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
     };
 
+    std::vector<glm::vec3> cubePositions = {
+        glm::vec3( 0.0f,  0.0f,  0.0f), 
+        glm::vec3( 2.0f,  5.0f, -15.0f), 
+        glm::vec3(-1.5f, -2.2f, -2.5f),  
+        glm::vec3(-3.8f, -2.0f, -12.3f),  
+        glm::vec3( 2.4f, -0.4f, -3.5f),  
+        glm::vec3(-1.7f,  3.0f, -7.5f),  
+        glm::vec3( 1.3f, -2.0f, -2.5f),  
+        glm::vec3( 1.5f,  2.0f, -2.5f), 
+        glm::vec3( 1.5f,  0.2f, -1.5f), 
+        glm::vec3(-1.3f,  1.0f, -1.5f)  
+    };
+
     glBindVertexArray( vao ); // BEGIN RECORD VERTEX ATTRIBUTE
 
     // -- Vertex Buffer
@@ -188,42 +201,33 @@ int main()
         glBindVertexArray( vao );
         // ----------------
 
-        // ..+ Transformation +..
-        // ----------------------
-        glm::mat4 model = glm::rotate(glm::mat4(1.0f), time * (float)glm::radians(55.0f), glm::vec3(0.5f, 1.0f, 0.0f) );
-        glm::mat4 view = glm::translate(glm::mat4(1.0f), -1.0f * glm::vec3(0.0f, 0.0f, 3.0f) );
-        glm::mat4 proj = glm::perspective((float)glm::radians(45.0f), float(SCR_WIDTH)/float(SCR_HEIGHT), 0.1f, 100.0f );
-        // ----------------------
-
         // ..+ Setting up per-frame value +..
         // ----------------------------------
         shader.use();
         // -- Shader value for all object
         shader.setFloat("alpha", alpha);
-        shader.setMat4fv("model", model, 1, false);
+        // -- Transformation value for all object
+        glm::mat4 view = glm::translate(glm::mat4(1.0f), -1.0f * glm::vec3(0.0f, 0.0f, 5.0f) );
         shader.setMat4fv("view", view, 1, false);
+        glm::mat4 proj = glm::perspective((float)glm::radians(45.0f), float(SCR_WIDTH)/float(SCR_HEIGHT), 0.1f, 100.0f );
         shader.setMat4fv("proj", proj, 1, false);
-        // // Object 1
-        //     // -- Transformations
-        //     glm::mat4 transform = glm::mat4( 1.0f );
-        //     time = glfwGetTime();
-        //     transform = glm::translate( transform, glm::vec3( 0.5f, -0.5f, 0.0f));
-        //     transform = glm::rotate( transform, time, glm::vec3(0.0f, 0.0f, 1.0f) );
-        //     // -- Set in the shader
-        //     shader.setMat4fv("transform", transform, 1, false);
-        //     // -- Draw
-        //     glDrawElements( GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, (void*)0 );
-        // // Object 2
-        //     // -- Transformations
-        //     transform = glm::mat4( 1.0f );
-        //     transform = glm::translate( transform, glm::vec3( -0.5f, 0.5f, 0.0f ) );
-        //     float scaleFactor = glm::sin( time );
-        //     transform = glm::scale( transform, scaleFactor * glm::vec3( 1.0f, 1.0f, 0.0f ) );
-        //     // -- Set in the shader
-        //     shader.setMat4fv("transform", transform, 1, false);
-        //     // -- Draw
-        // glDrawElements( GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, (void*)0 );
-        glDrawArrays( GL_TRIANGLES, 0, 36 );
+        const size_t size = sizeof(cubePositions);
+        // -- Transformation value for individual object
+        for(int i = 0; i < cubePositions.size(); ++i)
+        {
+            const float timePerIterate = time;
+
+            glm::mat4 model = glm::mat4(1.0f);
+
+            model = glm::translate(model, cubePositions[i]);
+
+            const float angle = 20.0f * (i+1); 
+            model = glm::rotate(model, timePerIterate * (float)glm::radians(angle), glm::vec3(0.5f, 1.0f, 0.0f) );
+
+            shader.setMat4fv("model", model, 1, false);
+
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+        }
         // ----------------------------------
 
         // .. + swap buffers and poll the events + ..
