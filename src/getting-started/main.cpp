@@ -170,30 +170,40 @@ int main()
         glBindVertexArray( vao );
         // ----------------
 
+        // ..+ Transformation +..
+        // ----------------------
+        glm::mat4 model = glm::rotate(glm::mat4(1.0f), (float)glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f) );
+        glm::mat4 view = glm::translate(glm::mat4(1.0f), -1.0f * glm::vec3(0.0f, 0.0f, 3.0f) );
+        glm::mat4 proj = glm::perspective((float)glm::radians(45.0f), float(SCR_WIDTH)/float(SCR_HEIGHT), 0.1f, 100.0f );
+        // ----------------------
+
         // ..+ Setting up per-frame value +..
         // ----------------------------------
         shader.use();
         // -- Shader value for all object
         shader.setFloat("alpha", alpha);
-        // Object 1
-            // -- Transformations
-            glm::mat4 transform = glm::mat4( 1.0f );
-            time = glfwGetTime();
-            transform = glm::translate( transform, glm::vec3( 0.5f, -0.5f, 0.0f));
-            transform = glm::rotate( transform, time, glm::vec3(0.0f, 0.0f, 1.0f) );
-            // -- Set in the shader
-            shader.setMat4fv("transform", transform, 1, false);
-            // -- Draw
-            glDrawElements( GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, (void*)0 );
-        // Object 2
-            // -- Transformations
-            transform = glm::mat4( 1.0f );
-            transform = glm::translate( transform, glm::vec3( -0.5f, 0.5f, 0.0f ) );
-            float scaleFactor = glm::sin( time );
-            transform = glm::scale( transform, scaleFactor * glm::vec3( 1.0f, 1.0f, 0.0f ) );
-            // -- Set in the shader
-            shader.setMat4fv("transform", transform, 1, false);
-            // -- Draw
+        shader.setMat4fv("model", model, 1, false);
+        shader.setMat4fv("view", view, 1, false);
+        shader.setMat4fv("proj", proj, 1, false);
+        // // Object 1
+        //     // -- Transformations
+        //     glm::mat4 transform = glm::mat4( 1.0f );
+        //     time = glfwGetTime();
+        //     transform = glm::translate( transform, glm::vec3( 0.5f, -0.5f, 0.0f));
+        //     transform = glm::rotate( transform, time, glm::vec3(0.0f, 0.0f, 1.0f) );
+        //     // -- Set in the shader
+        //     shader.setMat4fv("transform", transform, 1, false);
+        //     // -- Draw
+        //     glDrawElements( GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, (void*)0 );
+        // // Object 2
+        //     // -- Transformations
+        //     transform = glm::mat4( 1.0f );
+        //     transform = glm::translate( transform, glm::vec3( -0.5f, 0.5f, 0.0f ) );
+        //     float scaleFactor = glm::sin( time );
+        //     transform = glm::scale( transform, scaleFactor * glm::vec3( 1.0f, 1.0f, 0.0f ) );
+        //     // -- Set in the shader
+        //     shader.setMat4fv("transform", transform, 1, false);
+        //     // -- Draw
             glDrawElements( GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, (void*)0 );
         // ----------------------------------
 
