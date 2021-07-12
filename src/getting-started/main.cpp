@@ -210,43 +210,43 @@ int main()
         // ----------------------------------
         shader.use();
         // -- Getting input for transformations
-        if( glfwGetKey(window, GLFW_KEY_1 ) == GLFW_PRESS )
+        if( glfwGetKey(window, GLFW_KEY_1 ) == GLFW_PRESS )     // press '1' to increase fov
         {
             fovDegree += 1.0f;
         }
-        if( glfwGetKey(window, GLFW_KEY_2 ) == GLFW_PRESS )
+        if( glfwGetKey(window, GLFW_KEY_2 ) == GLFW_PRESS )     // press '2' to decrease fov
         {
             fovDegree -= 1.0f;
         }
-        if( glfwGetKey(window, GLFW_KEY_3 ) == GLFW_PRESS )
+        if( glfwGetKey(window, GLFW_KEY_3 ) == GLFW_PRESS )     // press '3' to increase aspect ratio
         {
             aspectRatio += 0.05f;
         }
-        if( glfwGetKey(window, GLFW_KEY_4 ) == GLFW_PRESS )
+        if( glfwGetKey(window, GLFW_KEY_4 ) == GLFW_PRESS )     // press '3' to decrease aspect ratio
         {
             aspectRatio -= 0.05f;
         }
-        if( glfwGetKey(window, GLFW_KEY_EQUAL ) == GLFW_PRESS )
+        if( glfwGetKey(window, GLFW_KEY_EQUAL ) == GLFW_PRESS ) // press '=' to zoom-in
         {
             z_axis -= 0.05f;
         }
-        if( glfwGetKey(window, GLFW_KEY_MINUS ) == GLFW_PRESS )
+        if( glfwGetKey(window, GLFW_KEY_MINUS ) == GLFW_PRESS ) // press '-' to zoom-out
         {
             z_axis += 0.05f;
         }
-        if( glfwGetKey(window, GLFW_KEY_A ) == GLFW_PRESS )
+        if( glfwGetKey(window, GLFW_KEY_A ) == GLFW_PRESS )     // press 'A' to move left
         {
             x_axis -= 0.05f;
         }
-        if( glfwGetKey(window, GLFW_KEY_D ) == GLFW_PRESS )
+        if( glfwGetKey(window, GLFW_KEY_D ) == GLFW_PRESS )     // press 'D' to move right
         {
             x_axis += 0.05f;
         }
-        if( glfwGetKey(window, GLFW_KEY_W ) == GLFW_PRESS )
+        if( glfwGetKey(window, GLFW_KEY_W ) == GLFW_PRESS )     // press 'W' to move up
         {
             y_axis += 0.05f;
         }
-        if( glfwGetKey(window, GLFW_KEY_S ) == GLFW_PRESS )
+        if( glfwGetKey(window, GLFW_KEY_S ) == GLFW_PRESS )     // press 'S' to move down
         {
             y_axis -= 0.05f;
         }
